@@ -11,12 +11,12 @@ import java.util.Properties;
 
 public class TweetProducer {
 
-    private void printUsageAndExit(int code){
+    private void printUsageAndExit(int code) {
         System.err.println("Usage: TweetProducer <client id> <bootstrap servers> <topic>");
         System.exit(code);
     }
 
-    private Properties makeProperties(String clientId, String bootstrapServers){
+    private Properties makeProperties(String clientId, String bootstrapServers) {
         Properties kafkaProps = new Properties();
         kafkaProps.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
         kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -26,8 +26,8 @@ public class TweetProducer {
         return kafkaProps;
     }
 
-    public void run(String[] args){
-        if(args.length < 3){
+    public void run(String[] args) {
+        if (args.length < 3) {
             printUsageAndExit(-1);
         }
 
@@ -49,13 +49,13 @@ public class TweetProducer {
         private KafkaProducer<byte[], String> producer;
         private String topic;
 
-        public TweetProducerStatusListener(Properties props, String topic){
+        public TweetProducerStatusListener(Properties props, String topic) {
             this.producer = new KafkaProducer<>(props);
             this.topic = topic;
         }
 
         @Override
-        public void onStatus(Status status){
+        public void onStatus(Status status) {
             String jsonStatus = TwitterObjectFactory.getRawJSON(status);
             ProducerRecord record = new ProducerRecord<byte[], String>(this.topic, jsonStatus);
             producer.send(record);
